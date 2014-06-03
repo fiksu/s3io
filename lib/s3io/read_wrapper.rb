@@ -25,7 +25,7 @@ module S3io
     # Reads data from S3 object.
     #
     # @param [Integer] bytes number of bytes to read
-    def read(bytes = nil)
+    def read(bytes = nil, outbuf = nil)
       content_length = @s3object.content_length
 
       return '' if (@pos >= content_length) || (bytes == 0)
@@ -37,6 +37,8 @@ module S3io
 
       data = @s3object.read :range => @pos..upper_bound
       @pos = upper_bound + 1
+
+      outbuf.replace data if outbuf 
 
       return data
     end
