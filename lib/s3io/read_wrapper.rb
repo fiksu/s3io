@@ -26,14 +26,14 @@ module S3io
     #
     # @param [Integer] bytes number of bytes to read
     def read(bytes = nil, outbuf = nil)
-      content_length = @s3object.content_length
+      @content_length =|| @s3object.content_length
 
-      return '' if (@pos >= content_length) || (bytes == 0)
+      return '' if (@pos >= @content_length) || (bytes == 0)
 
-      bytes ||= content_length
+      bytes ||= @content_length
 
       upper_bound = @pos + bytes - 1
-      upper_bound = (content_length - 1) if upper_bound >= content_length
+      upper_bound = (@content_length - 1) if upper_bound >= @content_length
 
       data = @s3object.read :range => @pos..upper_bound
       @pos = upper_bound + 1
