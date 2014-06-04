@@ -26,7 +26,7 @@ module S3io
     #
     # @param [Integer] bytes number of bytes to read
     def read(bytes = nil, outbuf = nil)
-      @content_length =|| @s3object.content_length
+      @content_length ||= @s3object.content_length
 
       return '' if (@pos >= @content_length) || (bytes == 0)
 
