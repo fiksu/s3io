@@ -66,11 +66,8 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
 
     wrapper.read(100)
     @s3object.change_last_modified
-    begin
+    assert_raise S3io::ReadModifiedError do
       wrapper.read(1)
-      fail 'Didn\'t raise ReadModifiedError'
-    rescue S3io::ReadModifiedError
-      # Worked correctly
     end
   end
 

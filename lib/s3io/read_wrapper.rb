@@ -42,7 +42,10 @@ module S3io
 
       data = @s3object.read :range => @pos..upper_bound
 
-      fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read" unless @s3object.last_modified == @last_modified
+      last_modified = @s3object.last_modified
+      unless last_modified == @last_modified
+        fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read, last_modified=#{last_modified.to_s} (was #{@last_modified.to_s})"
+      end
 
       @pos = upper_bound + 1
 
