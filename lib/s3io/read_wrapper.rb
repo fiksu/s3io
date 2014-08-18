@@ -4,6 +4,10 @@ module S3io
     open(s3object, 'r', options, &block)
   end
 
+  # This error indicates that the object was modified between being opened
+  # and being read.
+  class ReadModifiedError < IOError; end
+
   class ReadWrapper < Wrapper
 
     # Default buffer size for line parser in bytes
@@ -20,6 +24,7 @@ module S3io
       @options = {
         :line_buffer_size => (options[:line_buffer_size] || LINE_BUFFER_SIZE)
       }
+      @last_modified = @s3object.last_modified
     end
 
     # Reads data from S3 object.
@@ -36,6 +41,12 @@ module S3io
       upper_bound = (content_length - 1) if upper_bound >= content_length
 
       data = @s3object.read :range => @pos..upper_bound
+
+      last_modified = @s3object.last_modified
+      unless last_modified == @last_modified
+        fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read, last_modified=#{last_modified.to_s} (was #{@last_modified.to_s})"
+      end
+
       @pos = upper_bound + 1
 
       return data
@@ -81,6 +92,5 @@ module S3io
     end
     alias lines each
     alias each_line each
-
   end
 end
