@@ -62,10 +62,12 @@ It can write:
       io.write 'def'
     end
 
+If the file is being changed during the read process, an ```S3io::ReadModifiedError``` is thrown.
+
+
 ## To do
 
 * Code documentation
-* Fix an issue where S3 file that is updated while read streaming happens may result in garbage being read
 
 ## Contributing
 
