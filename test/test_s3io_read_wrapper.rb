@@ -6,6 +6,7 @@ require 'stringio'
 class S3ObjectReadMock
   def initialize(body = '')
     @body = body
+    @last_modified = Time.now
   end
 
   def read(options = {})
@@ -18,6 +19,19 @@ class S3ObjectReadMock
   def content_length
     @body.size
   end
+
+  def last_modified
+    @last_modified
+  end
+
+  def key
+    'test/file/name'
+  end
+
+  def change_last_modified
+    @last_modified = @last_modified + 1
+  end
+
 end
 
 class S3ioReadWrapperTest < Test::Unit::TestCase
@@ -45,6 +59,19 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
 
     assert_equal(S3_TEST_DATA[0..99], wrapper.read(100))
     assert_equal(S3_TEST_DATA[100..100], wrapper.read(1))
+  end
+
+  def test_last_modified_check
+    wrapper = S3io::ReadWrapper.new(@s3object)
+
+    wrapper.read(100)
+    @s3object.change_last_modified
+    begin
+      wrapper.read(1)
+      fail 'Didn\'t raise ReadModifiedError'
+    rescue S3io::ReadModifiedError
+      # Worked correctly
+    end
   end
 
   def test_each
