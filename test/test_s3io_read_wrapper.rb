@@ -54,6 +54,16 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
     assert_equal(0, wrapper.pos)
   end
 
+  def test_zero_outbuf_read
+    wrapper = S3io::ReadWrapper.new(@s3object)
+    data = String.new
+
+    wrapper.read(0,data)
+    
+    assert_equal('', data)
+    assert_equal(0, wrapper.pos)
+  end
+
   def test_partial_read
     wrapper = S3io::ReadWrapper.new(@s3object)
 
@@ -69,6 +79,17 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
     assert_raise S3io::ReadModifiedError do
       wrapper.read(1)
     end
+  end
+
+  def test_partial_outbuf_read
+    wrapper = S3io::ReadWrapper.new(@s3object)
+    data = String.new
+
+    wrapper.read(100, data)
+    assert_equal(S3_TEST_DATA[0..99], data)
+
+    wrapper.read(1, data)
+    assert_equal(S3_TEST_DATA[100..100], data)
   end
 
   def test_each
