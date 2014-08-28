@@ -42,10 +42,6 @@ module S3io
 
       data = @s3object.read :range => @pos..upper_bound, :if_unmodified_since => @last_modified
 
-      last_modified = @s3object.last_modified
-      unless last_modified == @last_modified
-      end
-
       @pos = upper_bound + 1
 
       return data
