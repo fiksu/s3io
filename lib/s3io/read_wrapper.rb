@@ -53,7 +53,7 @@ module S3io
     end
 
     def eof?
-      @pos >= @content_length || (@content_length = @s3object.content_length)
+      (@content_length = @s3object.content_length) && (@pos >= @content_length)
     end
 
     # Rewinds position to the very beginning of S3 object.
