@@ -11,7 +11,10 @@ class S3ObjectReadMock
 
   def read(options = {})
     range = options[:range]
+    if_unmodified_since = options[:if_unmodified_since]
+
     fail "The mock should be called with a :range option" unless range
+    fail AWS::S3::Errors::PreconditionFailed if if_unmodified_since && if_unmodified_since != @last_modified
 
     return @body[range]
   end

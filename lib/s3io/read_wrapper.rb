@@ -40,16 +40,14 @@ module S3io
       upper_bound = @pos + bytes - 1
       upper_bound = (content_length - 1) if upper_bound >= content_length
 
-      data = @s3object.read :range => @pos..upper_bound
-
-      last_modified = @s3object.last_modified
-      unless last_modified == @last_modified
-        fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read, last_modified=#{last_modified.to_s} (was #{@last_modified.to_s})"
-      end
+      data = @s3object.read :range => @pos..upper_bound, :if_unmodified_since => @last_modified
 
       @pos = upper_bound + 1
 
       return data
+
+    rescue AWS::S3::Errors::PreconditionFailed
+      fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read (modified since #{@last_modified.to_s})"
     end
 
     def eof?
