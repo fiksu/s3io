@@ -190,4 +190,15 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
 
     assert_equal('', wrapper.read)
   end
+
+  def test_gets
+    wrapper = S3io::ReadWrapper.new(@s3object)
+
+    lines = []
+    while line = wrapper.gets
+      lines << line
+    end
+
+    assert_equal(S3_TEST_DATA.lines.to_a, lines)
+  end
 end
