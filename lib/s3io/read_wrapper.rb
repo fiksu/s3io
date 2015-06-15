@@ -92,5 +92,15 @@ module S3io
     end
     alias lines each
     alias each_line each
+
+    # Returns one string at a time.
+    #
+    # @param [String] separator line separator string
+    def gets(separator = $/)
+      @_gets ||= enum_for(:each, separator)
+      @_gets.next
+    rescue StopIteration
+      nil
+    end
   end
 end
