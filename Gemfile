@@ -11,3 +11,5 @@ group :development do
     gem "redcarpet"
   end
 end
+
+gem "test-unit", :group => :test if RUBY_VERSION >= '2.2'

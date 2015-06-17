@@ -48,7 +48,7 @@ module S3io
 
       return data
 
-    rescue AWS::S3::Errors::PreconditionFailed
+    rescue ::AWS::S3::Errors::PreconditionFailed
       fail ReadModifiedError, "S3 object #{@s3object.key} was updated during read (modified since #{@last_modified.to_s})"
     end
 

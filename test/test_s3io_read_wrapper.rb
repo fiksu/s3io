@@ -62,7 +62,7 @@ class S3ioReadWrapperTest < Test::Unit::TestCase
     data = String.new
 
     wrapper.read(0,data)
-    
+
     assert_equal('', data)
     assert_equal(0, wrapper.pos)
   end
