@@ -4,5 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 gem "rake"
+gem 'nokogiri', '< 1.6' if RUBY_VERSION < '1.9'
 
 gem "test-unit", :group => :test if RUBY_VERSION >= '2.2'

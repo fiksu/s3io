@@ -4,13 +4,13 @@
 
 An IO-compatible wrapper for S3.
 
-Amazon's official AWS SDK provides an API for S3 that isn't compatible with Ruby's standard IO class and its derivatives. This gem provides a thin wrapper around AWS SDK that makes it possible to access objects stored on S3 as if they were instances of File or StringIO classes.
+Amazon's official AWS SDK (version 1) provides an API for S3 that isn't compatible with Ruby's standard IO class and its derivatives. This gem provides a thin wrapper around AWS SDK (version 1) that makes it possible to access objects stored on S3 as if they were instances of File or StringIO classes.
 
-Currently only reads are supported with writes support coming soon.
+Both streamed reads and writes are supported.
 
 ## Warning
 
-Reads currently don't guarantee consistency if S3 file changes while being streamed. I plan to solve this, but meanwhile please keep in mind that you may read garbage if you replace S3 file while streaming it.
+Reads guarantee consistency if S3 file changes while being streamed, but only if versioning has been enabled for that file. S3io always reads from the same version of the file it read the first chunk from. If a non-versioned file is changed during the read process, an ```S3io::ReadModifiedError``` is thrown. To protect against this, enable versioning for the bucket where file is located. Lifecycle policy can be used to automatically delete older versions based on their age.
 
 ## Installation
 
@@ -61,9 +61,6 @@ It can write:
       io.write 'abc'
       io.write 'def'
     end
-
-If the file is being changed during the read process, an ```S3io::ReadModifiedError``` is thrown.
-
 
 ## To do
 
