@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Amazon's official AWS SDK provides an API for S3 that isn't compatible with Ruby's standard IO class and its derivatives. This gem provides a thin wrapper around AWS SDK that makes it possible to access objects stored on S3 as if they were instances of File or StringIO classes.}
   gem.homepage      = "http://github.com/fiksu/s3io"
 
-  gem.add_dependency('aws-sdk', "~> 1.64.0")
+  gem.add_development_dependency('aws-sdk', "~> 1.64.0")
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
