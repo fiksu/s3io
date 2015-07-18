@@ -44,6 +44,8 @@ module S3io
       return data_size
     end
 
+    alias_method :<<, :write
+
     def flush
       return if @write_buffer.empty?
 
