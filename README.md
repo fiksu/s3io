@@ -4,6 +4,8 @@
 
 An IO-compatible wrapper for S3.
 
+Note: this repository was moved to https://github.com/arp/s3io to the maintainer's account.
+
 Amazon's official AWS SDK (version 1) provides an API for S3 that isn't compatible with Ruby's standard IO class and its derivatives. This gem provides a thin wrapper around AWS SDK (version 1) that makes it possible to access objects stored on S3 as if they were instances of File or StringIO classes.
 
 Both streamed reads and writes are supported.
